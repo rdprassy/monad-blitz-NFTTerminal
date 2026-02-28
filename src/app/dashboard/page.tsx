@@ -1,17 +1,21 @@
 "use client";
 
-import { useAccount } from "wagmi";
+import { useAccount, useBalance, useBlockNumber, usePublicClient } from "wagmi";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Rocket,
   Users,
   BarChart3,
   Shield,
-  TrendingUp,
   Layers,
   Activity,
   ArrowUpRight,
+  Wallet,
+  Cpu,
 } from "lucide-react";
+import { NFT_TERMINAL_ABI } from "@/lib/contracts";
+import { getDeployedContracts, addDeployedContract, DeployedContract } from "@/lib/deployedContracts";
 
 const quickActions = [
   {
@@ -44,15 +48,68 @@ const quickActions = [
   },
 ];
 
-const mockStats = [
-  { label: "Collections Deployed", value: "0", icon: Layers, change: "" },
-  { label: "Total Minted", value: "0", icon: Activity, change: "" },
-  { label: "Unique Holders", value: "0", icon: Users, change: "" },
-  { label: "Total Volume", value: "0 MON", icon: TrendingUp, change: "" },
-];
-
 export default function DashboardPage() {
-  const { isConnected } = useAccount();
+  const { address, isConnected } = useAccount();
+  const { data: balance } = useBalance({ address });
+  const { data: blockNumber } = useBlockNumber({ watch: true });
+  const publicClient = usePublicClient();
+
+  const [totalMinted, setTotalMinted] = useState<string>("0");
+  const [contracts, setContracts] = useState<DeployedContract[]>([]);
+
+  // Seed the already-deployed contract on first load
+  useEffect(() => {
+    addDeployedContract({
+      address: "0x44eb47fdca09d1baee865390991155d5abb49abc",
+      name: "NFT Terminal",
+      symbol: "NFTT",
+      maxSupply: "10000",
+      mintPrice: "0.01",
+      deployedAt: 1740700000000,
+      txHash: "",
+    });
+    setContracts(getDeployedContracts());
+  }, []);
+
+  // Refresh contract list when window regains focus (picks up new deploys)
+  useEffect(() => {
+    const onFocus = () => setContracts(getDeployedContracts());
+    window.addEventListener("focus", onFocus);
+    return () => window.removeEventListener("focus", onFocus);
+  }, []);
+
+  // Fetch total minted across all deployed contracts
+  useEffect(() => {
+    async function fetchTotalMinted() {
+      if (!publicClient || contracts.length === 0) return;
+      let total = BigInt(0);
+      for (const c of contracts) {
+        try {
+          const supply = await publicClient.readContract({
+            address: c.address as `0x${string}`,
+            abi: NFT_TERMINAL_ABI,
+            functionName: "totalSupply",
+          });
+          total += BigInt(supply as bigint);
+        } catch {
+          // skip inaccessible contracts
+        }
+      }
+      setTotalMinted(String(total));
+    }
+    fetchTotalMinted();
+  }, [publicClient, blockNumber, contracts]);
+
+  const balanceFormatted = balance
+    ? `${parseFloat(balance.formatted).toFixed(4)} ${balance.symbol}`
+    : "— MON";
+
+  const stats = [
+    { label: "Wallet Balance", value: balanceFormatted, icon: Wallet, change: isConnected ? "Live" : "" },
+    { label: "Collections Deployed", value: String(contracts.length), icon: Layers, change: contracts.length > 0 ? contracts[contracts.length - 1].name : "" },
+    { label: "Total Minted", value: totalMinted, icon: Activity, change: "" },
+    { label: "Block Number", value: blockNumber ? blockNumber.toLocaleString() : "—", icon: Cpu, change: "Monad Testnet" },
+  ];
 
   return (
     <div className="space-y-8 py-6">
@@ -61,14 +118,14 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
         <p className="text-gray-400">
           {isConnected
-            ? "Welcome back. Manage your NFT collections on Monad."
+            ? `Welcome back. Connected as ${address?.slice(0, 6)}...${address?.slice(-4)}`
             : "Connect your wallet to get started."}
         </p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {mockStats.map((stat) => (
+        {stats.map((stat) => (
           <div key={stat.label} className="glass-card p-5">
             <div className="flex items-center justify-between mb-3">
               <stat.icon size={20} className="text-monad-purple-light" />

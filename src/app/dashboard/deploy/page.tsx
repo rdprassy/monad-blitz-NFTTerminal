@@ -7,6 +7,7 @@ import { Rocket, Loader2, CheckCircle, AlertCircle, ExternalLink } from "lucide-
 import { monadTestnet } from "@/lib/wagmi";
 import { NFT_TERMINAL_ABI } from "@/lib/contracts";
 import { NFT_TERMINAL_BYTECODE } from "@/lib/bytecode";
+import { addDeployedContract } from "@/lib/deployedContracts";
 
 export default function DeployPage() {
   const { isConnected, chainId, connector } = useAccount();
@@ -97,6 +98,15 @@ export default function DeployPage() {
 
       if (receipt.contractAddress) {
         setDeployedAddress(receipt.contractAddress);
+        addDeployedContract({
+          address: receipt.contractAddress,
+          name: formData.name,
+          symbol: formData.symbol,
+          maxSupply: formData.maxSupply,
+          mintPrice: formData.mintPrice,
+          deployedAt: Date.now(),
+          txHash: hash,
+        });
       } else {
         setError("Deployment transaction confirmed but no contract address returned.");
       }
