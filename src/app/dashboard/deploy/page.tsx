@@ -1,13 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useAccount, useWalletClient } from "wagmi";
+import { useAccount, useWalletClient, usePublicClient, useSwitchChain } from "wagmi";
+import { parseEther, createWalletClient, custom, createPublicClient, http } from "viem";
 import { Rocket, Loader2, CheckCircle, AlertCircle, ExternalLink } from "lucide-react";
 import { monadTestnet } from "@/lib/wagmi";
+import { NFT_TERMINAL_ABI } from "@/lib/contracts";
+import { NFT_TERMINAL_BYTECODE } from "@/lib/bytecode";
 
 export default function DeployPage() {
-  const { isConnected } = useAccount();
-  const { data: walletClient } = useWalletClient();
+  const { isConnected, chainId, connector } = useAccount();
+  const { data: walletClient } = useWalletClient({ chainId });
+  const publicClient = usePublicClient({ chainId });
+  const { switchChainAsync } = useSwitchChain();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -27,7 +32,7 @@ export default function DeployPage() {
   };
 
   const handleDeploy = async () => {
-    if (!walletClient || !isConnected) {
+    if (!isConnected) {
       setError("Please connect your wallet first.");
       return;
     }
@@ -42,16 +47,59 @@ export default function DeployPage() {
     setDeployedAddress("");
 
     try {
-      // In production, you'd deploy the actual contract bytecode here.
-      // For the MVP, we simulate the deployment flow.
-      // The actual deployment requires the compiled bytecode from Hardhat.
-      
-      // Simulated deployment for demo purposes
-      await new Promise((resolve) => setTimeout(resolve, 3000));
-      
-      // Demo address — replace with actual deployment logic
-      const demoAddress = "0x" + Array.from({ length: 40 }, () => Math.floor(Math.random() * 16).toString(16)).join("");
-      setDeployedAddress(demoAddress);
+      // Switch to Monad Testnet if needed
+      if (chainId !== monadTestnet.id) {
+        try {
+          await switchChainAsync({ chainId: monadTestnet.id });
+        } catch {
+          setError("Please switch to Monad Testnet (Chain ID 10143) in MetaMask and try again.");
+          setDeploying(false);
+          return;
+        }
+      }
+
+      // Get wallet client — either from wagmi or create one directly from the provider
+      let client = walletClient;
+      if (!client && connector) {
+        const provider = await connector.getProvider();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        client = createWalletClient({ chain: monadTestnet, transport: custom(provider as any) });
+      }
+
+      if (!client) {
+        setError("Could not get wallet client. Please refresh the page and reconnect your wallet.");
+        setDeploying(false);
+        return;
+      }
+
+      // Get accounts from the wallet
+      const [account] = await client.getAddresses();
+
+      const pubClient = publicClient ?? createPublicClient({ chain: monadTestnet, transport: http() });
+
+      const mintPriceWei = parseEther(formData.mintPrice || "0");
+      const maxSupply = BigInt(formData.maxSupply || "10000");
+      const maxPerWallet = BigInt(formData.maxPerWallet || "5");
+      const baseURI = formData.baseURI || "ipfs://placeholder/";
+
+      const hash = await client.deployContract({
+        account,
+        abi: NFT_TERMINAL_ABI,
+        bytecode: NFT_TERMINAL_BYTECODE,
+        args: [formData.name, formData.symbol, maxSupply, mintPriceWei, maxPerWallet, baseURI],
+        chain: monadTestnet,
+      });
+
+      setError("");
+      setDeployedAddress("pending:" + hash);
+
+      const receipt = await pubClient.waitForTransactionReceipt({ hash });
+
+      if (receipt.contractAddress) {
+        setDeployedAddress(receipt.contractAddress);
+      } else {
+        setError("Deployment transaction confirmed but no contract address returned.");
+      }
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Deployment failed. Please try again.";
       setError(message);
@@ -179,8 +227,22 @@ export default function DeployPage() {
             </div>
           )}
 
+          {/* Pending */}
+          {deployedAddress && deployedAddress.startsWith("pending:") && (
+            <div className="glass-card p-6 border-monad-purple/30">
+              <div className="flex items-center gap-2 text-monad-purple mb-3">
+                <Loader2 size={20} className="animate-spin" />
+                <span className="font-semibold">Transaction submitted, waiting for confirmation...</span>
+              </div>
+              <div className="bg-monad-dark-secondary rounded-lg p-3">
+                <p className="text-xs text-gray-400 mb-1">Transaction Hash</p>
+                <code className="text-sm text-white font-mono break-all">{deployedAddress.replace("pending:", "")}</code>
+              </div>
+            </div>
+          )}
+
           {/* Success */}
-          {deployedAddress && (
+          {deployedAddress && !deployedAddress.startsWith("pending:") && (
             <div className="glass-card p-6 border-monad-accent/30">
               <div className="flex items-center gap-2 text-monad-accent mb-3">
                 <CheckCircle size={20} />
