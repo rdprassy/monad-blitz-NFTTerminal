@@ -39,6 +39,9 @@ export function Navbar() {
             <Link href="/dashboard/deploy" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">
               Deploy
             </Link>
+            <Link href="/dashboard/mint" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">
+              Mint
+            </Link>
             <Link href="/dashboard/analytics" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">
               Analytics
             </Link>

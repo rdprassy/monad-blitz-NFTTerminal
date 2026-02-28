@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   Rocket,
+  Gem,
   Users,
   BarChart3,
   Shield,
@@ -15,6 +16,7 @@ import {
 const sidebarItems = [
   { label: "Overview", href: "/dashboard", icon: LayoutDashboard },
   { label: "Deploy Collection", href: "/dashboard/deploy", icon: Rocket },
+  { label: "Mint NFTs", href: "/dashboard/mint", icon: Gem },
   { label: "Allowlist", href: "/dashboard/allowlist", icon: Users },
   { label: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
   { label: "Token Gating", href: "/dashboard/gating", icon: Shield },
