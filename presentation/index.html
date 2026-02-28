@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NFT Terminal — Presentation</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --purple: #836EF9;
+      --purple-light: #A78BFA;
+      --purple-dark: #6C3FF5;
+      --dark: #0D0B1A;
+      --dark-secondary: #151226;
+      --dark-card: #1A1730;
+      --dark-border: #2A2545;
+      --accent: #00E5A0;
+      --accent-dark: #00C389;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--dark);
+      color: #fff;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    /* Slide System */
+    .slide {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      padding: 60px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .slide.active { display: flex; flex-direction: column; }
+
+    /* Navigation */
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: rgba(13, 11, 26, 0.95);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--dark-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      z-index: 100;
+    }
+    .nav-bar button {
+      background: var(--purple);
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-bar button:hover { background: var(--purple-light); }
+    .nav-bar button:disabled { opacity: 0.3; cursor: default; }
+    .slide-counter {
+      font-size: 14px;
+      color: #888;
+      font-weight: 500;
+    }
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--purple), var(--accent));
+      transition: width 0.4s ease;
+      z-index: 100;
+    }
+
+    /* Typography */
+    h1 { font-size: 52px; font-weight: 800; line-height: 1.1; }
+    h2 { font-size: 40px; font-weight: 700; line-height: 1.2; }
+    h3 { font-size: 28px; font-weight: 600; }
+    p { font-size: 18px; line-height: 1.7; color: #ccc; }
+    .subtitle { font-size: 22px; color: #aaa; margin-top: 16px; font-weight: 400; }
+    .gradient-text {
+      background: linear-gradient(135deg, var(--purple), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .tag {
+      display: inline-block;
+      background: rgba(131, 110, 249, 0.15);
+      color: var(--purple-light);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    /* Layout helpers */
+    .flex-center { display: flex; align-items: center; justify-content: center; flex: 1; }
+    .flex-col { display: flex; flex-direction: column; }
+    .gap-12 { gap: 12px; }
+    .gap-20 { gap: 20px; }
+    .gap-32 { gap: 32px; }
+    .gap-40 { gap: 40px; }
+    .mt-auto { margin-top: auto; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; flex: 1; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; }
+
+    /* Cards */
+    .card {
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.3s;
+    }
+    .card:hover { border-color: var(--purple); transform: translateY(-2px); }
+    .card h4 { font-size: 20px; font-weight: 600; margin-bottom: 10px; }
+    .card p { font-size: 15px; color: #999; line-height: 1.6; }
+    .card .icon {
+      width: 48px; height: 48px;
+      background: rgba(131, 110, 249, 0.15);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+      margin-bottom: 16px;
+    }
+
+    /* Table */
+    .info-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    .info-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--dark-border);
+      font-size: 15px;
+    }
+    .info-table td:first-child { color: #888; font-weight: 500; width: 200px; }
+    .info-table td:last-child { color: #fff; font-weight: 600; }
+
+    /* Code block */
+    .code-block {
+      background: var(--dark-secondary);
+      border: 1px solid var(--dark-border);
+      border-radius: 12px;
+      padding: 24px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: var(--accent);
+      line-height: 1.8;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    /* Step list */
+    .step-list { list-style: none; display: flex; flex-direction: column; gap: 20px; }
+    .step-list li {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .step-num {
+      min-width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--purple), var(--purple-dark));
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 18px;
+    }
+    .step-content h4 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+    .step-content p { font-size: 15px; color: #999; }
+
+    /* Glow */
+    .glow-bg {
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      filter: blur(150px);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    .glow-purple { background: var(--purple); top: -100px; right: -100px; }
+    .glow-accent { background: var(--accent); bottom: -100px; left: -100px; }
+
+    /* Stat */
+    .stat-box { text-align: center; }
+    .stat-box .num { font-size: 48px; font-weight: 800; }
+    .stat-box .label { font-size: 14px; color: #888; margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* Badge row */
+    .badge-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    .badge {
+      background: var(--dark-secondary);
+      border: 1px solid var(--dark-border);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #ccc;
+      font-weight: 500;
+    }
+
+    /* Mockup */
+    .mockup-browser {
+      background: var(--dark-secondary);
+      border: 1px solid var(--dark-border);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .mockup-bar {
+      height: 40px;
+      background: var(--dark-card);
+      border-bottom: 1px solid var(--dark-border);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 8px;
+    }
+    .mockup-dot { width: 12px; height: 12px; border-radius: 50%; }
+    .mockup-dot.red { background: #FF5F57; }
+    .mockup-dot.yellow { background: #FEBC2E; }
+    .mockup-dot.green { background: #28C840; }
+    .mockup-url {
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      color: #666;
+    }
+    .mockup-content {
+      padding: 30px;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .mockup-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--dark-border);
+    }
+    .mockup-logo { font-weight: 700; font-size: 16px; }
+    .mockup-btn {
+      background: var(--purple);
+      color: #fff;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .mockup-hero { text-align: center; padding: 30px 0; }
+    .mockup-hero h2 { font-size: 24px; margin-bottom: 8px; }
+    .mockup-hero p { font-size: 13px; color: #888; }
+
+    /* Architecture */
+    .arch-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .arch-box {
+      background: var(--dark-card);
+      border: 1px solid var(--dark-border);
+      border-radius: 12px;
+      padding: 20px 28px;
+      text-align: center;
+      min-width: 140px;
+    }
+    .arch-box .emoji { font-size: 28px; margin-bottom: 8px; }
+    .arch-box .name { font-size: 14px; font-weight: 600; }
+    .arch-box .desc { font-size: 11px; color: #888; margin-top: 4px; }
+    .arch-arrow { font-size: 24px; color: var(--purple); }
+
+    /* Highlight box */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(131,110,249,0.1), rgba(0,229,160,0.05));
+      border: 1px solid var(--dark-border);
+      border-radius: 16px;
+      padding: 28px;
+    }
+
+    @media print {
+      .nav-bar, .progress-bar { display: none !important; }
+      .slide { display: flex !important; page-break-after: always; height: auto; min-height: 100vh; }
+      body { overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ==================== SLIDE 1: Title ==================== -->
+<div class="slide active" id="slide-1">
+  <div class="glow-bg glow-purple"></div>
+  <div class="glow-bg glow-accent"></div>
+  <div class="flex-center">
+    <div style="text-align: center; max-width: 800px;">
+      <div class="tag">Monad Testnet</div>
+      <h1 style="margin-bottom: 16px;">
+        <span class="gradient-text">NFT Terminal</span>
+      </h1>
+      <p class="subtitle">The All-in-One NFT Launchpad on Monad for Creators, Influencers, and Artists</p>
+      <div style="margin-top: 40px; display: flex; gap: 40px; justify-content: center;">
+        <div class="stat-box">
+          <div class="num gradient-text">7</div>
+          <div class="label">Pages Built</div>
+        </div>
+        <div class="stat-box">
+          <div class="num gradient-text">1</div>
+          <div class="label">Contract Deployed</div>
+        </div>
+        <div class="stat-box">
+          <div class="num gradient-text">10K</div>
+          <div class="label">Max NFT Supply</div>
+        </div>
+      </div>
+      <div class="badge-row" style="justify-content: center; margin-top: 32px;">
+        <span class="badge">Next.js 14</span>
+        <span class="badge">TailwindCSS</span>
+        <span class="badge">wagmi v2</span>
+        <span class="badge">viem</span>
+        <span class="badge">Solidity 0.8.27</span>
+        <span class="badge">Hardhat</span>
+        <span class="badge">OpenZeppelin</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 2: Problem & Solution ==================== -->
+<div class="slide" id="slide-2">
+  <div class="glow-bg glow-purple"></div>
+  <div class="tag">Why NFT Terminal?</div>
+  <h2>The Problem & Our Solution</h2>
+  <div class="two-col" style="margin-top: 32px;">
+    <div class="flex-col gap-20">
+      <h3 style="color: #FF6B6B;">The Problem</h3>
+      <div class="card">
+        <h4>Fragmented Tools</h4>
+        <p>Creators juggle between 5+ platforms to deploy contracts, manage allowlists, track analytics, and set up token gating.</p>
+      </div>
+      <div class="card">
+        <h4>Technical Barriers</h4>
+        <p>Most NFT tools require coding knowledge. Artists and influencers can't deploy without a developer.</p>
+      </div>
+      <div class="card">
+        <h4>High Costs</h4>
+        <p>Ethereum gas fees make small collections impractical. Launches often cost more than the NFTs themselves.</p>
+      </div>
+    </div>
+    <div class="flex-col gap-20">
+      <h3 style="color: var(--accent);">Our Solution</h3>
+      <div class="card" style="border-color: var(--accent);">
+        <h4>One Dashboard</h4>
+        <p>Deploy, manage allowlists, view analytics, and generate gating code — all from a single unified interface.</p>
+      </div>
+      <div class="card" style="border-color: var(--accent);">
+        <h4>No-Code Deployment</h4>
+        <p>Fill a form, click deploy. Your ERC-721 contract goes live on Monad in seconds with zero coding.</p>
+      </div>
+      <div class="card" style="border-color: var(--accent);">
+        <h4>Built on Monad</h4>
+        <p>Near-zero gas fees, 10,000 TPS throughput. Launch a 10K collection for pennies, not hundreds of dollars.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 3: Architecture ==================== -->
+<div class="slide" id="slide-3">
+  <div class="glow-bg glow-accent"></div>
+  <div class="tag">Architecture</div>
+  <h2>Tech Stack & Architecture</h2>
+  <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 40px;">
+    <div class="arch-flow">
+      <div class="arch-box">
+        <div class="emoji">🌐</div>
+        <div class="name">Next.js 14</div>
+        <div class="desc">App Router, SSR</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box">
+        <div class="emoji">🔗</div>
+        <div class="name">wagmi + viem</div>
+        <div class="desc">Wallet Connection</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box" style="border-color: var(--purple);">
+        <div class="emoji">📜</div>
+        <div class="name">Smart Contract</div>
+        <div class="desc">ERC-721 on Monad</div>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box" style="border-color: var(--accent);">
+        <div class="emoji">⛓️</div>
+        <div class="name">Monad Testnet</div>
+        <div class="desc">Chain ID: 10143</div>
+      </div>
+    </div>
+    <div class="three-col">
+      <div class="card">
+        <div class="icon">🎨</div>
+        <h4>Frontend</h4>
+        <p>React + Next.js 14 (App Router) with TailwindCSS for a modern dark-themed UI with glass-morphism effects.</p>
+      </div>
+      <div class="card">
+        <div class="icon">👛</div>
+        <h4>Wallet Layer</h4>
+        <p>wagmi v2 with viem for type-safe Ethereum interactions. MetaMask injected connector for Monad Testnet.</p>
+      </div>
+      <div class="card">
+        <div class="icon">⚡</div>
+        <h4>Smart Contracts</h4>
+        <p>Solidity 0.8.27 with OpenZeppelin v5. ERC721Enumerable + MerkleProof whitelisting. Hardhat for compilation.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 4: Landing Page ==================== -->
+<div class="slide" id="slide-4">
+  <div class="glow-bg glow-purple"></div>
+  <div class="tag">Feature Walkthrough</div>
+  <h2>Landing Page</h2>
+  <p style="margin-top: 8px;">Route: <code style="color: var(--accent);">localhost:3000/</code></p>
+  <div class="two-col" style="margin-top: 24px;">
+    <div class="flex-col gap-20">
+      <div class="mockup-browser">
+        <div class="mockup-bar">
+          <div class="mockup-dot red"></div>
+          <div class="mockup-dot yellow"></div>
+          <div class="mockup-dot green"></div>
+          <div class="mockup-url">localhost:3000</div>
+        </div>
+        <div class="mockup-content" style="background: linear-gradient(180deg, var(--dark), var(--dark-secondary));">
+          <div class="mockup-nav">
+            <div class="mockup-logo">⚡ NFT Terminal</div>
+            <div class="mockup-btn">Connect Wallet</div>
+          </div>
+          <div class="mockup-hero">
+            <h2 class="gradient-text">Your NFT Launchpad</h2>
+            <p>Deploy, mint, gate, and analyze on Monad.</p>
+            <div style="display: flex; gap: 12px; justify-content: center; margin-top: 16px;">
+              <div class="mockup-btn">Launch App</div>
+              <div class="mockup-btn" style="background: transparent; border: 1px solid var(--dark-border);">Learn More</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 16px; justify-content: center;">
+            <div style="text-align: center;"><div style="font-size: 20px; font-weight: 700;">10K+</div><div style="font-size: 10px; color: #888;">NFTs Minted</div></div>
+            <div style="text-align: center;"><div style="font-size: 20px; font-weight: 700;">500+</div><div style="font-size: 10px; color: #888;">Collections</div></div>
+            <div style="text-align: center;"><div style="font-size: 20px; font-weight: 700;">$0.001</div><div style="font-size: 10px; color: #888;">Avg Gas</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-col gap-20">
+      <h3>What Users See</h3>
+      <ul class="step-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Hero Section</h4>
+            <p>Bold headline with gradient text, tagline, and two CTAs: "Launch App" and "Learn More".</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Live Stats Bar</h4>
+            <p>Shows NFTs minted, collections deployed, and average gas cost on Monad.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Feature Grid</h4>
+            <p>6 cards showcasing No-Code Deploy, Allowlist, Analytics, Token Gating, Monad Speed, and Community tools.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Connect Wallet</h4>
+            <p>MetaMask button in navbar. One-click connect to Monad Testnet.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 5: Dashboard Overview ==================== -->
+<div class="slide" id="slide-5">
+  <div class="glow-bg glow-accent"></div>
+  <div class="tag">Feature Walkthrough</div>
+  <h2>Dashboard Overview</h2>
+  <p style="margin-top: 8px;">Route: <code style="color: var(--accent);">localhost:3000/dashboard</code></p>
+  <div class="two-col" style="margin-top: 24px;">
+    <div class="flex-col gap-20">
+      <div class="mockup-browser">
+        <div class="mockup-bar">
+          <div class="mockup-dot red"></div>
+          <div class="mockup-dot yellow"></div>
+          <div class="mockup-dot green"></div>
+          <div class="mockup-url">localhost:3000/dashboard</div>
+        </div>
+        <div class="mockup-content">
+          <div style="display: flex; gap: 12px;">
+            <div style="width: 180px; background: var(--dark-card); border-radius: 8px; padding: 16px; font-size: 12px;">
+              <div style="font-weight: 700; margin-bottom: 12px;">Dashboard</div>
+              <div style="color: var(--purple); margin-bottom: 8px;">◈ Overview</div>
+              <div style="color: #888; margin-bottom: 8px;">🚀 Deploy</div>
+              <div style="color: #888; margin-bottom: 8px;">👥 Allowlist</div>
+              <div style="color: #888; margin-bottom: 8px;">📊 Analytics</div>
+              <div style="color: #888; margin-bottom: 8px;">🔒 Gating</div>
+              <div style="color: #888;">📖 Docs</div>
+            </div>
+            <div style="flex: 1;">
+              <div style="font-weight: 600; font-size: 16px; margin-bottom: 12px;">Dashboard</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div style="background: var(--dark-card); border-radius: 8px; padding: 12px;"><div style="font-size: 10px; color: #888;">Collections</div><div style="font-size: 20px; font-weight: 700;">0</div></div>
+                <div style="background: var(--dark-card); border-radius: 8px; padding: 12px;"><div style="font-size: 10px; color: #888;">Total Minted</div><div style="font-size: 20px; font-weight: 700;">0</div></div>
+                <div style="background: var(--dark-card); border-radius: 8px; padding: 12px;"><div style="font-size: 10px; color: #888;">Holders</div><div style="font-size: 20px; font-weight: 700;">0</div></div>
+                <div style="background: var(--dark-card); border-radius: 8px; padding: 12px;"><div style="font-size: 10px; color: #888;">Volume</div><div style="font-size: 20px; font-weight: 700;">0 MON</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="flex-col gap-20">
+      <h3>Dashboard Layout</h3>
+      <div class="card">
+        <h4>Sidebar Navigation</h4>
+        <p>6 menu items: Overview, Deploy Collection, Allowlist, Analytics, Token Gating, and Docs. Highlights the active page.</p>
+      </div>
+      <div class="card">
+        <h4>Stats Cards</h4>
+        <p>4 key metrics at a glance: Collections Deployed, Total Minted, Unique Holders, and Total Volume in MON.</p>
+      </div>
+      <div class="card">
+        <h4>Quick Actions</h4>
+        <p>One-click shortcuts to deploy a new collection, manage allowlists, view analytics, or set up gating.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 6: Deploy Collection ==================== -->
+<div class="slide" id="slide-6">
+  <div class="glow-bg glow-purple"></div>
+  <div class="tag">Feature Walkthrough</div>
+  <h2>Deploy Collection (No-Code)</h2>
+  <p style="margin-top: 8px;">Route: <code style="color: var(--accent);">localhost:3000/dashboard/deploy</code></p>
+  <div class="two-col" style="margin-top: 24px;">
+    <div class="flex-col gap-20">
+      <h3>How It Works</h3>
+      <ul class="step-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Fill the Form</h4>
+            <p>Enter collection name, symbol, max supply, mint price (in MON), max per wallet, and base URI for metadata.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Review Parameters</h4>
+            <p>A live preview card shows all your settings before deployment. Change anything before committing.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Click Deploy</h4>
+            <p>One click sends the transaction to Monad Testnet. MetaMask pops up for confirmation.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Get Your Contract</h4>
+            <p>After confirmation, you get the deployed contract address with a link to Monad Explorer.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="flex-col gap-20">
+      <div class="highlight-box">
+        <h3 style="margin-bottom: 16px;">Form Fields</h3>
+        <table class="info-table">
+          <tr><td>Collection Name</td><td>e.g. "My NFT Collection"</td></tr>
+          <tr><td>Symbol</td><td>e.g. "MNFT"</td></tr>
+          <tr><td>Max Supply</td><td>e.g. 10,000</td></tr>
+          <tr><td>Mint Price</td><td>e.g. 0.01 MON</td></tr>
+          <tr><td>Max Per Wallet</td><td>e.g. 5</td></tr>
+          <tr><td>Base URI</td><td>IPFS metadata URL</td></tr>
+        </table>
+      </div>
+      <div class="card" style="border-color: var(--accent);">
+        <h4 style="color: var(--accent);">No Solidity Required</h4>
+        <p>The contract is pre-built with OpenZeppelin. You just configure the parameters and deploy. The ERC-721 contract includes public mint, whitelist mint, ownership, and withdrawal functions.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 7: Allowlist ==================== -->
+<div class="slide" id="slide-7">
+  <div class="glow-bg glow-accent"></div>
+  <div class="tag">Feature Walkthrough</div>
+  <h2>Allowlist Management</h2>
+  <p style="margin-top: 8px;">Route: <code style="color: var(--accent);">localhost:3000/dashboard/allowlist</code></p>
+  <div class="two-col" style="margin-top: 24px;">
+    <div class="flex-col gap-20">
+      <div class="card">
+        <div class="icon">👥</div>
+        <h4>Add Addresses Manually</h4>
+        <p>Paste wallet addresses one by one. Validates Ethereum address format (0x + 40 hex characters). Duplicates are automatically filtered.</p>
+      </div>
+      <div class="card">
+        <div class="icon">📁</div>
+        <h4>CSV Upload</h4>
+        <p>Upload a CSV file with wallet addresses. Handles comma and newline-separated formats. Bulk add hundreds of addresses instantly.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🌳</div>
+        <h4>Merkle Root Generation</h4>
+        <p>Click "Generate Merkle Root" to compute the root hash from all addresses. Copy it and set it in the smart contract for on-chain whitelist verification.</p>
+      </div>
+    </div>
+    <div class="flex-col gap-20">
+      <h3>Allowlist Flow</h3>
+      <ul class="step-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Collect Addresses</h4>
+            <p>Add manually or upload CSV with wallets from community, Discord, or Twitter giveaways.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Review & Clean</h4>
+            <p>View all addresses in a scrollable list. Remove any with one click. Export as CSV for backup.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Generate Merkle Root</h4>
+            <p>Compute the Merkle tree root hash. This is a single bytes32 value that's stored on-chain.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Set On-Chain</h4>
+            <p>Call <code style="color: var(--accent);">setMerkleRoot()</code> on your contract with the generated root to activate whitelisting.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 8: Analytics ==================== -->
+<div class="slide" id="slide-8">
+  <div class="glow-bg glow-purple"></div>
+  <div class="tag">Feature Walkthrough</div>
+  <h2>Analytics Dashboard</h2>
+  <p style="margin-top: 8px;">Route: <code style="color: var(--accent);">localhost:3000/dashboard/analytics</code></p>
+  <div class="two-col" style="margin-top: 24px;">
+    <div class="flex-col gap-20">
+      <h3>Key Metrics</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 32px; font-weight: 800; color: var(--purple);">2,847</div>
+          <p>Total Minted</p>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 32px; font-weight: 800; color: var(--accent);">1,203</div>
+          <p>Unique Holders</p>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 32px; font-weight: 800; color: #FF6B6B;">28.47</div>
+          <p>Volume (MON)</p>
+        </div>
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 32px; font-weight: 800; color: #FFA500;">156</div>
+          <p>Transfers (24h)</p>
+        </div>
+      </div>
+    </div>
+    <div class="flex-col gap-20">
+      <div class="card">
+        <h4>Mint History</h4>
+        <p>Visual bar chart showing daily mint activity over time. Identify trends and plan marketing around mint velocity.</p>
+      </div>
+      <div class="card">
+        <h4>Top Holders</h4>
+        <p>Leaderboard of the largest holders with address, count, and percentage of total supply. Spot whales and engaged collectors.</p>
+      </div>
+      <div class="card">
+        <h4>Recent Transfers</h4>
+        <p>Live feed of NFT transfers: from, to, token ID, and timestamp. Monitor secondary market activity in real-time.</p>
+      </div>
+      <div class="card">
+        <h4>Contract Lookup</h4>
+        <p>Enter any deployed contract address to load its analytics. Works with any ERC-721 on Monad.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 9: Token Gating ==================== -->
+<div class="slide" id="slide-9">
+  <div class="glow-bg glow-accent"></div>
+  <div class="tag">Feature Walkthrough</div>
+  <h2>Token Gating</h2>
+  <p style="margin-top: 8px;">Route: <code style="color: var(--accent);">localhost:3000/dashboard/gating</code></p>
+  <div class="two-col" style="margin-top: 24px;">
+    <div class="flex-col gap-20">
+      <h3>Auto-Generated Code Snippets</h3>
+      <p>Get plug-and-play code to restrict content based on NFT ownership. Four integration types provided:</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px;">
+        <div class="card">
+          <h4>⚛️ React / Next.js</h4>
+          <p>wagmi hooks to check balance and conditionally render gated content.</p>
+        </div>
+        <div class="card">
+          <h4>🌐 HTML / Vanilla JS</h4>
+          <p>Embedded script using ethers.js for static sites. Copy-paste ready.</p>
+        </div>
+        <div class="card">
+          <h4>🖥️ Node.js Backend</h4>
+          <p>Express middleware that verifies ownership server-side before granting access.</p>
+        </div>
+        <div class="card">
+          <h4>🔌 Next.js API</h4>
+          <p>Serverless API route that checks on-chain balance and returns access status.</p>
+        </div>
+      </div>
+    </div>
+    <div class="flex-col gap-20">
+      <h3>Example: React Gate</h3>
+      <div class="code-block">function TokenGate({ children }) {
+  const { address } = useAccount();
+  const { data: balance } = useReadContract({
+    address: NFT_CONTRACT,
+    abi: NFT_ABI,
+    functionName: 'balanceOf',
+    args: [address],
+  });
+
+  if (balance > 0) {
+    return children; // ✅ Show gated content
+  }
+
+  return &lt;p&gt;You need an NFT to access.&lt;/p&gt;;
+}</div>
+      <div class="card" style="border-color: var(--accent);">
+        <h4>One-Click Copy</h4>
+        <p>Each snippet has a copy button. Paste into your project, replace the contract address, and you have working token gating.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 10: Deployed Contract Proof ==================== -->
+<div class="slide" id="slide-10">
+  <div class="glow-bg glow-purple"></div>
+  <div class="tag">Proof of Deployment</div>
+  <h2>Live Contract on Monad Testnet</h2>
+  <div class="two-col" style="margin-top: 24px;">
+    <div class="flex-col gap-20">
+      <h3>Deployment Details</h3>
+      <table class="info-table">
+        <tr><td>Contract</td><td style="color: var(--accent); word-break: break-all;">0x44eb47fdca09d1baee865390991155d5abb49abc</td></tr>
+        <tr><td>Network</td><td>Monad Testnet (Chain ID: 10143)</td></tr>
+        <tr><td>Deployer</td><td style="word-break: break-all;">0x61bCDe7246C1D4EafEAEf0d2Ae7Fa69D378e5F3D</td></tr>
+        <tr><td>Tx Hash</td><td style="font-size: 12px; word-break: break-all;">0x6a0aa1712e4401fef5c0f79c480d62cea1ba2419aaa9fb49174921d7d8e5c287</td></tr>
+        <tr><td>Block</td><td>15,689,499</td></tr>
+        <tr><td>Gas Used</td><td>2,225,252</td></tr>
+        <tr><td>Solidity</td><td>0.8.27 (EVM: Cancun)</td></tr>
+      </table>
+    </div>
+    <div class="flex-col gap-20">
+      <h3>On-Chain State (Verified)</h3>
+      <table class="info-table">
+        <tr><td>Name</td><td>NFT Terminal Collection</td></tr>
+        <tr><td>Symbol</td><td>NFTC</td></tr>
+        <tr><td>Max Supply</td><td>10,000</td></tr>
+        <tr><td>Mint Price</td><td>0.01 MON</td></tr>
+        <tr><td>Max Per Wallet</td><td>5</td></tr>
+        <tr><td>Total Minted</td><td>0</td></tr>
+        <tr><td>Owner</td><td style="word-break: break-all;">0x61bCDe...e5F3D</td></tr>
+      </table>
+      <div class="highlight-box" style="text-align: center; margin-top: 8px;">
+        <p style="color: #fff; font-weight: 600;">Verify on Monad Explorer</p>
+        <p style="font-size: 14px; color: var(--accent); word-break: break-all;">testnet.monadexplorer.com/address/0x44eb47fdca09d1baee865390991155d5abb49abc</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 11: Wallet Connection ==================== -->
+<div class="slide" id="slide-11">
+  <div class="glow-bg glow-accent"></div>
+  <div class="tag">User Guide</div>
+  <h2>Connecting Your Wallet</h2>
+  <div class="two-col" style="margin-top: 24px;">
+    <div class="flex-col gap-20">
+      <h3>Step-by-Step</h3>
+      <ul class="step-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Install MetaMask</h4>
+            <p>Download from metamask.io. Available as a browser extension for Chrome, Firefox, Brave, and Edge.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Add Monad Testnet</h4>
+            <p>Open MetaMask → Settings → Networks → Add Network. Enter the Monad Testnet details (see table).</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Get Testnet MON</h4>
+            <p>Visit the Monad faucet to get free testnet MON tokens for deploying and minting.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Click "Connect Wallet"</h4>
+            <p>On NFT Terminal, click the purple "Connect Wallet" button. MetaMask prompts for approval. Your address shows in the navbar.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div class="flex-col gap-20">
+      <h3>Monad Testnet Config</h3>
+      <div class="highlight-box">
+        <table class="info-table">
+          <tr><td>Network Name</td><td>Monad Testnet</td></tr>
+          <tr><td>RPC URL</td><td style="color: var(--accent);">https://testnet-rpc.monad.xyz</td></tr>
+          <tr><td>Chain ID</td><td>10143</td></tr>
+          <tr><td>Symbol</td><td>MON</td></tr>
+          <tr><td>Explorer</td><td style="color: var(--accent);">testnet.monadexplorer.com</td></tr>
+        </table>
+      </div>
+      <div class="card" style="border-color: var(--purple);">
+        <h4>Wallet Features in App</h4>
+        <p>Once connected, your wallet address appears in the top navbar (shortened format). Click to disconnect. All dashboard pages are wallet-aware and adjust their UI based on connection status.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 12: How to Run ==================== -->
+<div class="slide" id="slide-12">
+  <div class="glow-bg glow-purple"></div>
+  <div class="tag">Getting Started</div>
+  <h2>How to Run NFT Terminal</h2>
+  <div class="two-col" style="margin-top: 24px;">
+    <div class="flex-col gap-20">
+      <h3>Quick Start</h3>
+      <div class="code-block">
+# Clone the repo
+git clone https://github.com/rdprassy/monadblitzapp.git
+cd monadblitzapp
+
+# Install dependencies
+npm install
+
+# Set up environment
+cp .env.example .env.local
+
+# Run development server
+npm run dev
+
+# Open in browser
+# → http://localhost:3000</div>
+    </div>
+    <div class="flex-col gap-20">
+      <h3>All Commands</h3>
+      <div class="highlight-box">
+        <table class="info-table">
+          <tr><td>npm run dev</td><td>Start dev server</td></tr>
+          <tr><td>npm run build</td><td>Production build</td></tr>
+          <tr><td>npm run start</td><td>Start production</td></tr>
+          <tr><td>npm run lint</td><td>Run ESLint</td></tr>
+          <tr><td>npx hardhat compile</td><td>Compile contracts</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h4>Deploy to Vercel</h4>
+        <p>Push to GitHub → Go to vercel.com → Import repo → Click Deploy. Your app is live in 60 seconds. Zero config needed.</p>
+      </div>
+      <div class="card" style="border-color: var(--accent);">
+        <h4>GitHub Repository</h4>
+        <p style="color: var(--accent); font-weight: 600;">github.com/rdprassy/monadblitzapp</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 13: Thank You ==================== -->
+<div class="slide" id="slide-13">
+  <div class="glow-bg glow-purple"></div>
+  <div class="glow-bg glow-accent"></div>
+  <div class="flex-center">
+    <div style="text-align: center; max-width: 700px;">
+      <div class="tag">Thank You</div>
+      <h1 style="margin-bottom: 16px;">
+        <span class="gradient-text">NFT Terminal</span>
+      </h1>
+      <p class="subtitle">Built on Monad. Made for Creators.</p>
+      <div style="margin-top: 48px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
+        <div class="card" style="text-align: center; min-width: 180px;">
+          <h4 style="color: var(--accent);">GitHub</h4>
+          <p>rdprassy/monadblitzapp</p>
+        </div>
+        <div class="card" style="text-align: center; min-width: 180px;">
+          <h4 style="color: var(--purple);">Contract</h4>
+          <p style="font-size: 12px;">0x44eb47...b49abc</p>
+        </div>
+        <div class="card" style="text-align: center; min-width: 180px;">
+          <h4 style="color: #FF6B6B;">Network</h4>
+          <p>Monad Testnet</p>
+        </div>
+      </div>
+      <p style="margin-top: 48px; font-size: 20px; color: #666;">
+        "Launch fast, grow smart — mint, gate, analyze, and scale on Monad."
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Navigation Bar -->
+<div class="nav-bar">
+  <button id="prevBtn" onclick="changeSlide(-1)" disabled>← Previous</button>
+  <span class="slide-counter" id="slideCounter">1 / 13</span>
+  <button id="nextBtn" onclick="changeSlide(1)">Next →</button>
+</div>
+
+<script>
+  let current = 1;
+  const total = 13;
+
+  function changeSlide(dir) {
+    const next = current + dir;
+    if (next < 1 || next > total) return;
+    document.getElementById(`slide-${current}`).classList.remove('active');
+    current = next;
+    document.getElementById(`slide-${current}`).classList.add('active');
+    document.getElementById('slideCounter').textContent = `${current} / ${total}`;
+    document.getElementById('prevBtn').disabled = current === 1;
+    document.getElementById('nextBtn').disabled = current === total;
+    document.getElementById('progressBar').style.width = `${(current / total) * 100}%`;
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); }
+  });
+
+  document.getElementById('progressBar').style.width = `${(1 / total) * 100}%`;
+</script>
+
+</body>
+</html>
