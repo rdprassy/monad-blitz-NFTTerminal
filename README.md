@@ -5,6 +5,11 @@
 > "Your NFT Launchpad for the Creator Economy."
 > Launch fast, grow smart — mint, gate, analyze, and scale on Monad.
 
+## Live Demo
+
+- **Primary:** [https://monadblitz.rdprassy.com](https://monadblitz.rdprassy.com)
+- **Mirror:** [https://monadblitzapp.vercel.app](https://monadblitzapp.vercel.app/)
+
 ---
 
 ## Features
@@ -40,8 +45,8 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/rdprassy/monadblitzapp.git
-cd monadblitzapp
+git clone https://github.com/rdprassy/monad-blitz-NFTTerminal.git
+cd monad-blitz-NFTTerminal
 ```
 
 ### 2. Install Dependencies
