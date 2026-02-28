@@ -162,5 +162,8 @@ export const NFT_TERMINAL_ABI = [
   },
 ] as const;
 
+export const DEPLOYED_CONTRACT_ADDRESS =
+  "0x44eb47fdca09d1baee865390991155d5abb49abc" as `0x${string}`;
+
 export const NFT_TERMINAL_BYTECODE =
   "0x" as `0x${string}`;
