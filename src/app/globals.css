@@ -3,14 +3,13 @@
 @tailwind utilities;
 
 :root {
-  --background: #0D0B1A;
-  --foreground: #ededed;
+  --background: #15202B;
+  --foreground: #E7E9EA;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
 }
 
 @layer utilities {
@@ -21,34 +20,56 @@ body {
 
 @layer base {
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 4px;
   }
   ::-webkit-scrollbar-track {
-    background: #151226;
+    background: #15202B;
   }
   ::-webkit-scrollbar-thumb {
-    background: #836EF9;
-    border-radius: 3px;
+    background: #2F3336;
+    border-radius: 2px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #71767B;
   }
   ::selection {
-    background: rgba(131, 110, 249, 0.3);
+    background: rgba(29, 155, 240, 0.3);
+    color: #fff;
   }
 }
 
 @layer components {
   .glass-card {
-    @apply bg-monad-dark-card/80 backdrop-blur-xl border border-monad-dark-border rounded-2xl;
+    @apply bg-monad-dark-card border border-monad-dark-border rounded-2xl transition-colors duration-200;
   }
+  .glass-card:hover {
+    background: #1D1F23;
+  }
+
   .gradient-text {
-    @apply bg-gradient-to-r from-monad-purple to-monad-accent bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-monad-purple to-monad-purple-light bg-clip-text text-transparent;
   }
+
   .btn-primary {
-    @apply bg-gradient-to-r from-monad-purple to-monad-purple-dark hover:from-monad-purple-light hover:to-monad-purple text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:shadow-lg hover:shadow-monad-purple/25;
+    @apply bg-monad-purple hover:bg-monad-purple-dark text-white font-bold py-3 px-6 rounded-full transition-colors duration-200;
   }
+  .btn-primary:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+
   .btn-secondary {
-    @apply border border-monad-dark-border hover:border-monad-purple text-white font-semibold py-3 px-6 rounded-xl transition-all duration-300 hover:bg-monad-dark-card;
+    @apply border border-monad-dark-border hover:bg-monad-dark-card text-white font-bold py-3 px-6 rounded-full transition-colors duration-200;
   }
+
   .input-field {
-    @apply w-full bg-monad-dark-secondary border border-monad-dark-border rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-monad-purple focus:ring-1 focus:ring-monad-purple transition-all;
+    @apply w-full bg-monad-dark-secondary border border-monad-dark-border rounded-xl px-4 py-3 text-white placeholder-x-secondary focus:outline-none focus:border-monad-purple transition-colors duration-200;
+  }
+
+  .glow-dot {
+    @apply w-2 h-2 rounded-full bg-monad-accent;
+  }
+
+  .ai-badge {
+    @apply inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium border border-monad-dark-border text-x-secondary;
   }
 }

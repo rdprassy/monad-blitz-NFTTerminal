@@ -27,8 +27,8 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden lg:flex flex-col w-64 min-h-screen bg-monad-dark-secondary border-r border-monad-dark-border pt-20 px-4">
-      <div className="flex-1 space-y-1">
+    <aside className="hidden lg:flex flex-col w-64 min-h-screen border-r border-x-border bg-monad-dark pt-16 px-3">
+      <div className="flex-1 space-y-0.5 pt-4">
         {sidebarItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -36,13 +36,13 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
+                "flex items-center gap-3 px-4 py-3 rounded-full text-sm transition-colors duration-200",
                 isActive
-                  ? "bg-monad-purple/15 text-monad-purple-light border border-monad-purple/20"
-                  : "text-gray-400 hover:text-white hover:bg-monad-dark-card"
+                  ? "font-bold text-x-primary bg-x-hover"
+                  : "font-medium text-x-secondary hover:text-x-primary hover:bg-x-hover"
               )}
             >
-              <item.icon size={18} />
+              <item.icon size={20} />
               {item.label}
             </Link>
           );
@@ -50,12 +50,12 @@ export function Sidebar() {
       </div>
 
       <div className="pb-6">
-        <div className="glass-card p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 rounded-full bg-monad-accent animate-pulse" />
-            <span className="text-xs text-gray-400">Monad Testnet</span>
+        <div className="border border-x-border rounded-2xl p-4">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-2 h-2 rounded-full bg-monad-accent" />
+            <span className="text-xs text-x-primary font-bold">Monad Testnet</span>
           </div>
-          <p className="text-xs text-gray-500">Chain ID: 10143</p>
+          <p className="text-xs text-x-secondary">Chain ID: 10143</p>
         </div>
       </div>
     </aside>

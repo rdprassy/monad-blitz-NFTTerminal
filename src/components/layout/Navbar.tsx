@@ -18,35 +18,35 @@ export function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-monad-dark/80 backdrop-blur-xl border-b border-monad-dark-border">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-monad-dark/80 backdrop-blur-md border-b border-x-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-14">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-monad-purple to-monad-accent flex items-center justify-center">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-monad-purple flex items-center justify-center">
               <span className="text-white font-bold text-sm">NT</span>
             </div>
-            <span className="text-white font-bold text-xl">
+            <span className="text-x-primary font-bold text-lg">
               NFT <span className="gradient-text">Terminal</span>
             </span>
           </Link>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-6">
-            <Link href="/dashboard" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">
+          <div className="hidden md:flex items-center gap-1">
+            <Link href="/dashboard" className="text-x-secondary hover:text-x-primary hover:bg-x-hover transition-colors text-sm font-medium px-3 py-2 rounded-full">
               Dashboard
             </Link>
-            <Link href="/dashboard/deploy" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">
+            <Link href="/dashboard/deploy" className="text-x-secondary hover:text-x-primary hover:bg-x-hover transition-colors text-sm font-medium px-3 py-2 rounded-full">
               Deploy
             </Link>
-            <Link href="/dashboard/mint" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">
+            <Link href="/dashboard/mint" className="text-x-secondary hover:text-x-primary hover:bg-x-hover transition-colors text-sm font-medium px-3 py-2 rounded-full">
               Mint
             </Link>
-            <Link href="/dashboard/analytics" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">
+            <Link href="/dashboard/analytics" className="text-x-secondary hover:text-x-primary hover:bg-x-hover transition-colors text-sm font-medium px-3 py-2 rounded-full">
               Analytics
             </Link>
-            <Link href="/dashboard/gating" className="text-gray-300 hover:text-white transition-colors text-sm font-medium">
-              Token Gating
+            <Link href="/dashboard/gating" className="text-x-secondary hover:text-x-primary hover:bg-x-hover transition-colors text-sm font-medium px-3 py-2 rounded-full">
+              Gating
             </Link>
           </div>
 
@@ -54,9 +54,9 @@ export function Navbar() {
           <div className="flex items-center gap-3">
             {isConnected && address ? (
               <div className="flex items-center gap-2">
-                <div className="hidden sm:flex items-center gap-2 glass-card px-3 py-1.5 text-sm">
-                  <div className="w-2 h-2 rounded-full bg-monad-accent animate-pulse" />
-                  <span className="text-gray-300">{shortenAddress(address)}</span>
+                <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 text-sm rounded-full border border-x-border">
+                  <div className="w-2 h-2 rounded-full bg-monad-accent" />
+                  <span className="text-x-primary">{shortenAddress(address)}</span>
                 </div>
                 <button
                   onClick={() => disconnect()}

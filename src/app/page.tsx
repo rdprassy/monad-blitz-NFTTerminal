@@ -67,16 +67,12 @@ export default function Home() {
       <Navbar />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4 overflow-hidden">
-        {/* Background gradient blobs */}
-        <div className="absolute top-20 left-1/4 w-96 h-96 bg-monad-purple/20 rounded-full blur-3xl" />
-        <div className="absolute top-40 right-1/4 w-80 h-80 bg-monad-accent/10 rounded-full blur-3xl" />
-
-        <div className="relative max-w-5xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 glass-card px-4 py-2 mb-8 text-sm text-gray-300">
-            <Sparkles size={14} className="text-monad-accent" />
+      <section className="relative pt-28 pb-16 px-4">
+        <div className="max-w-5xl mx-auto text-center">
+          <div className="ai-badge mb-6">
+            <Sparkles size={12} className="text-monad-purple" />
             Built on Monad Testnet
-            <ChevronRight size={14} />
+            <ChevronRight size={12} />
           </div>
 
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
@@ -84,7 +80,7 @@ export default function Home() {
             <span className="gradient-text">Creator Economy</span>
           </h1>
 
-          <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10">
+          <p className="text-lg sm:text-xl text-x-secondary max-w-2xl mx-auto mb-10">
             Launch fast, grow smart — mint, gate, analyze, and scale on Monad.
             One dashboard. Infinite creative freedom.
           </p>
@@ -102,12 +98,12 @@ export default function Home() {
       </section>
 
       {/* Stats Bar */}
-      <section className="border-y border-monad-dark-border bg-monad-dark-secondary/50">
+      <section className="border-y border-x-border">
         <div className="max-w-6xl mx-auto px-4 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
-              <div className="text-2xl sm:text-3xl font-bold gradient-text">{stat.value}</div>
-              <div className="text-sm text-gray-400 mt-1">{stat.label}</div>
+              <div className="text-2xl sm:text-3xl font-bold text-x-primary">{stat.value}</div>
+              <div className="text-sm text-x-secondary mt-1">{stat.label}</div>
             </div>
           ))}
         </div>
@@ -121,7 +117,7 @@ export default function Home() {
               Everything You Need to{" "}
               <span className="gradient-text">Launch NFTs</span>
             </h2>
-            <p className="text-gray-400 max-w-xl mx-auto">
+            <p className="text-x-secondary max-w-xl mx-auto">
               A unified workflow for minting, whitelisting, analytics, and token gating — all in one streamlined dashboard.
             </p>
           </div>
@@ -130,13 +126,13 @@ export default function Home() {
             {features.map((feature) => (
               <div
                 key={feature.title}
-                className="glass-card p-6 hover:border-monad-purple/40 transition-all duration-300 group"
+                className="glass-card p-6 group"
               >
-                <div className="w-12 h-12 rounded-xl bg-monad-purple/10 flex items-center justify-center mb-4 group-hover:bg-monad-purple/20 transition-colors">
-                  <feature.icon size={24} className="text-monad-purple-light" />
+                <div className="w-10 h-10 rounded-full bg-monad-purple/10 flex items-center justify-center mb-4">
+                  <feature.icon size={20} className="text-monad-purple" />
                 </div>
-                <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
-                <p className="text-gray-400 text-sm leading-relaxed">{feature.description}</p>
+                <h3 className="text-[15px] font-bold text-x-primary mb-1.5">{feature.title}</h3>
+                <p className="text-x-secondary text-sm leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -144,28 +140,28 @@ export default function Home() {
       </section>
 
       {/* How it Works */}
-      <section className="py-24 px-4 bg-monad-dark-secondary/30">
+      <section className="py-20 px-4 border-t border-x-border">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold mb-4">
               How It <span className="gradient-text">Works</span>
             </h2>
           </div>
 
-          <div className="space-y-8">
+          <div className="space-y-4">
             {[
-              { step: "01", title: "Connect Your Wallet", desc: "Connect MetaMask or any EVM wallet to the Monad network." },
-              { step: "02", title: "Configure Your Drop", desc: "Set collection name, symbol, supply, price, and metadata URI." },
-              { step: "03", title: "Deploy & Launch", desc: "Deploy your ERC-721 contract to Monad with one click." },
-              { step: "04", title: "Manage & Analyze", desc: "Track mints, manage allowlists, gate content, and grow your community." },
+              { step: "1", title: "Connect Your Wallet", desc: "Connect MetaMask or any EVM wallet to the Monad network." },
+              { step: "2", title: "Configure Your Drop", desc: "Set collection name, symbol, supply, price, and metadata URI." },
+              { step: "3", title: "Deploy & Launch", desc: "Deploy your ERC-721 contract to Monad with one click." },
+              { step: "4", title: "Manage & Analyze", desc: "Track mints, manage allowlists, gate content, and grow your community." },
             ].map((item) => (
-              <div key={item.step} className="flex items-start gap-6 glass-card p-6">
-                <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br from-monad-purple to-monad-accent flex items-center justify-center">
+              <div key={item.step} className="flex items-start gap-4 glass-card p-5">
+                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-monad-purple flex items-center justify-center">
                   <span className="text-white font-bold text-sm">{item.step}</span>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-white mb-1">{item.title}</h3>
-                  <p className="text-gray-400 text-sm">{item.desc}</p>
+                  <h3 className="text-[15px] font-bold text-x-primary mb-0.5">{item.title}</h3>
+                  <p className="text-x-secondary text-sm">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -174,22 +170,19 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 px-4">
+      <section className="py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
-          <div className="glass-card p-12 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-monad-purple/10 to-monad-accent/5" />
-            <div className="relative">
-              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-                Ready to Launch?
-              </h2>
-              <p className="text-gray-400 mb-8 max-w-md mx-auto">
-                Join the next wave of NFT creators on Monad. Deploy your first collection in under a minute.
-              </p>
-              <Link href="/dashboard/deploy" className="btn-primary inline-flex items-center gap-2 text-lg py-4 px-8">
-                Deploy Now
-                <Rocket size={20} />
-              </Link>
-            </div>
+          <div className="glass-card p-10">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-3">
+              Ready to Launch?
+            </h2>
+            <p className="text-x-secondary mb-8 max-w-md mx-auto">
+              Join the next wave of NFT creators on Monad. Deploy your first collection in under a minute.
+            </p>
+            <Link href="/dashboard/deploy" className="btn-primary inline-flex items-center gap-2 text-lg py-3 px-8">
+              Deploy Now
+              <Rocket size={18} />
+            </Link>
           </div>
         </div>
       </section>
