@@ -23,7 +23,7 @@
 |-------|-----------|
 | Frontend | Next.js 14 (App Router) + TailwindCSS |
 | Wallet | wagmi v2 + viem |
-| Smart Contracts | Solidity 0.8.20, Hardhat, OpenZeppelin |
+| Smart Contracts | Solidity 0.8.27, Hardhat, OpenZeppelin |
 | Blockchain | Monad Testnet (Chain ID: 10143) |
 | Icons | Lucide React |
 
@@ -40,7 +40,7 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/monadblitzapp.git
+git clone https://github.com/rdprassy/monadblitzapp.git
 cd monadblitzapp
 ```
 
@@ -75,6 +75,36 @@ Open **http://localhost:3000** in your browser.
 | Chain ID | `10143` |
 | Currency Symbol | `MON` |
 | Block Explorer | `https://testnet.monadexplorer.com` |
+
+---
+
+## Deployed Contract (Proof of Deployment)
+
+The NFTTerminal smart contract has been successfully deployed to **Monad Testnet**.
+
+| Detail | Value |
+|--------|-------|
+| **Contract Address** | [`0x44eb47fdca09d1baee865390991155d5abb49abc`](https://testnet.monadexplorer.com/address/0x44eb47fdca09d1baee865390991155d5abb49abc) |
+| **Network** | Monad Testnet (Chain ID: 10143) |
+| **Deployer** | `0x61bCDe7246C1D4EafEAEf0d2Ae7Fa69D378e5F3D` |
+| **Tx Hash** | [`0x6a0aa1712e4401fef5c0f79c480d62cea1ba2419aaa9fb49174921d7d8e5c287`](https://testnet.monadexplorer.com/tx/0x6a0aa1712e4401fef5c0f79c480d62cea1ba2419aaa9fb49174921d7d8e5c287) |
+| **Block** | `15689499` |
+| **Solidity** | `0.8.27` (EVM: Cancun) |
+| **Gas Used** | `2,225,252` |
+
+### On-Chain Contract State
+
+| Parameter | Value |
+|-----------|-------|
+| Name | NFT Terminal Collection |
+| Symbol | NFTC |
+| Max Supply | 10,000 |
+| Mint Price | 0.01 MON |
+| Max Per Wallet | 5 |
+| Total Minted | 0 |
+| Owner | `0x61bCDe7246C1D4EafEAEf0d2Ae7Fa69D378e5F3D` |
+
+> Verify on Monad Explorer: [https://testnet.monadexplorer.com/address/0x44eb47fdca09d1baee865390991155d5abb49abc](https://testnet.monadexplorer.com/address/0x44eb47fdca09d1baee865390991155d5abb49abc)
 
 ---
 
@@ -148,7 +178,7 @@ monadblitzapp/
 git add .
 git commit -m "Initial commit: NFT Terminal - Monad NFT Launchpad"
 git branch -M main
-git remote add origin https://github.com/YOUR_USERNAME/monadblitzapp.git
+git remote add origin https://github.com/rdprassy/monadblitzapp.git
 git push -u origin main
 ```
 
