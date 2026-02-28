@@ -1,36 +1,194 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NFT Terminal
+
+**The all-in-one NFT launchpad on Monad for creators, influencers, and artists.**
+
+> "Your NFT Launchpad for the Creator Economy."
+> Launch fast, grow smart — mint, gate, analyze, and scale on Monad.
+
+---
+
+## Features
+
+- **No-Code Deployment** — Deploy ERC-721 contracts with configurable metadata, pricing, and limits
+- **Allowlist Management** — Merkle-tree based whitelisting with CSV upload support
+- **Holder Analytics** — Track mint volume, holder distribution, whale concentration, and transfers
+- **Token Gating** — Auto-generated code snippets (React, HTML, Node.js, Next.js API) for access control
+- **Monad Powered** — High throughput, near-zero gas fees, full EVM compatibility
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Frontend | Next.js 14 (App Router) + TailwindCSS |
+| Wallet | wagmi v2 + viem |
+| Smart Contracts | Solidity 0.8.20, Hardhat, OpenZeppelin |
+| Blockchain | Monad Testnet (Chain ID: 10143) |
+| Icons | Lucide React |
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- **Node.js** v18+ installed ([download](https://nodejs.org))
+- **MetaMask** or any EVM wallet browser extension
+- **Git** installed
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/monadblitzapp.git
+cd monadblitzapp
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+```
+
+### 3. Set Up Environment Variables
+
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local` with your values if needed. The defaults work for Monad Testnet.
+
+### 4. Run the Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open **http://localhost:3000** in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 5. Add Monad Testnet to MetaMask
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Field | Value |
+|-------|-------|
+| Network Name | Monad Testnet |
+| RPC URL | `https://testnet-rpc.monad.xyz` |
+| Chain ID | `10143` |
+| Currency Symbol | `MON` |
+| Block Explorer | `https://testnet.monadexplorer.com` |
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Smart Contract Deployment (Optional)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To deploy the NFTTerminal contract directly via Hardhat:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 1. Set your private key
 
-## Deploy on Vercel
+```bash
+# In .env file (NOT .env.local)
+PRIVATE_KEY=your_wallet_private_key_here
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 2. Compile contracts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npx hardhat compile
+```
+
+### 3. Deploy to Monad Testnet
+
+```bash
+npx hardhat run scripts/deploy.ts --network monadTestnet
+```
+
+---
+
+## Project Structure
+
+```
+monadblitzapp/
+├── contracts/              # Solidity smart contracts
+│   └── NFTTerminal.sol     # Main ERC-721 contract
+├── scripts/                # Hardhat deployment scripts
+│   └── deploy.ts
+├── src/
+│   ├── app/                # Next.js App Router pages
+│   │   ├── page.tsx        # Landing page
+│   │   └── dashboard/      # Dashboard pages
+│   │       ├── page.tsx        # Overview
+│   │       ├── deploy/         # Deploy collection
+│   │       ├── allowlist/      # Whitelist management
+│   │       ├── analytics/      # Analytics dashboard
+│   │       ├── gating/         # Token gating snippets
+│   │       └── docs/           # Documentation
+│   ├── components/         # React components
+│   │   ├── layout/         # Navbar, Sidebar, Footer
+│   │   └── providers/      # Web3Provider (wagmi)
+│   └── lib/                # Utilities and config
+│       ├── wagmi.ts        # Wagmi + Monad chain config
+│       ├── contracts.ts    # Contract ABI
+│       └── utils.ts        # Helper functions
+├── hardhat.config.ts       # Hardhat configuration
+├── tailwind.config.ts      # TailwindCSS with Monad theme
+└── .env.example            # Environment variables template
+```
+
+---
+
+## Pushing to GitHub
+
+### First Time Setup
+
+```bash
+# 1. Create a new repository on GitHub (https://github.com/new)
+#    Name it: monadblitzapp
+#    Do NOT initialize with README (we already have one)
+
+# 2. Initialize git and push
+git add .
+git commit -m "Initial commit: NFT Terminal - Monad NFT Launchpad"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/monadblitzapp.git
+git push -u origin main
+```
+
+### Subsequent Pushes
+
+```bash
+git add .
+git commit -m "your commit message"
+git push
+```
+
+---
+
+## Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start development server (http://localhost:3000) |
+| `npm run build` | Build for production |
+| `npm run start` | Start production server |
+| `npm run lint` | Run ESLint |
+| `npx hardhat compile` | Compile Solidity contracts |
+| `npx hardhat run scripts/deploy.ts --network monadTestnet` | Deploy to Monad |
+
+---
+
+## Deploy to Vercel
+
+1. Push your code to GitHub
+2. Go to [vercel.com](https://vercel.com)
+3. Import your GitHub repository
+4. Vercel auto-detects Next.js — click **Deploy**
+5. Your app will be live in ~60 seconds
+
+---
+
+## License
+
+MIT
+
+---
+
+**Built with love on Monad.**
